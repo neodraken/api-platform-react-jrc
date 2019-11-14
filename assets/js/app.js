@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './components/Navbar';
 import HomePage from "./pages/homePage";
-import {HashRouter, Switch, Route} from 'react-router-dom';
+import {HashRouter, Switch, Route, withRouter} from 'react-router-dom';
 import CustomersPage from "./pages/CustomersPage";
-import CustomersPageWithPagination from "./pages/CustomersPageWithPagination";
+//import CustomersPageWithPagination from "./pages/CustomersPageWithPagination";
 import InvoicesPage from "./pages/InvoicesPage";
+import LoginPage from "./pages/LoginPage";
+import AuthAPI from "./services/authAPI";
+import AuthContext from "./contexts/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+
 
 /*
  * Welcome to your app's main JavaScript file!
@@ -17,29 +22,40 @@ import InvoicesPage from "./pages/InvoicesPage";
 // any CSS you require will output into a single css file (app.css in this case)
 require('../css/app.css');
 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
-// const $ = require('jquery');
+AuthAPI.setup();
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js yeah !!');
 
 //localhost:8000/#/customers
 //localhost:8000/#/invoices
 
 const App = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI.isAuthenticated());
+
+    //ajoute les propriétés que Navbar n'a pas par défaut au contraire de Route (par exemple la props history)
+    const NavbarWithRouter = withRouter(Navbar);
+
     return (
-        <HashRouter>
-            <Navbar/>
-            <main className="container pt-5">
-                <Switch>
-                    {/*<Route path="/customers" component={CustomersPageWithPagination} />*/}
-                    <Route path="/invoices" component={InvoicesPage} />
-                    <Route path="/customers" component={CustomersPage} />
-                    <Route path="/" component={HomePage} />
-                </Switch>
-            </main>
-        </HashRouter>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            setIsAuthenticated
+        }}>
+            <HashRouter>
+                <NavbarWithRouter/>
+                <main className="container pt-5">
+                    <Switch>
+                        {/*<Route path="/customers" component={CustomersPageWithPagination} />*/}
+                        <Route path="/login" component={LoginPage}/>)}/>
+                        <PrivateRoute path="/invoices" component={InvoicesPage}/>
+                        <PrivateRoute path="/customers" component={CustomersPage}/>
+                        <Route path="/" component={HomePage}/>
+                    </Switch>
+                </main>
+            </HashRouter>
+        </AuthContext.Provider>
     );
 }
 
 const rootElement = document.querySelector('#app');
-ReactDOM.render(<App/>, rootElement);
+ReactDOM.render(
+    <App/>
+    , rootElement);
