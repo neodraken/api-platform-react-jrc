@@ -41,7 +41,7 @@ const RegisterPage = ({history}) => {
         }
 
         try {
-            await usersAPI(user);
+            await usersAPI.register(user);
             //TODO flash success
             toast.success("Vous êtes désormais inscrit, vous pouvez vous connecter !");
             setErrors({});
