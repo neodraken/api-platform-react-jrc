@@ -46,10 +46,7 @@ const RegisterPage = ({history}) => {
             toast.success("Vous êtes désormais inscrit, vous pouvez vous connecter !");
             setErrors({});
             history.replace('/login');
-
-            console.log(response);
         } catch (error) {
-            console.log(error.response);
             const {violations} = error.response.data;
 
             if (violations) {
