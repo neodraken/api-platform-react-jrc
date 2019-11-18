@@ -1,8 +1,9 @@
 import React, {useState, useContext} from 'react';
 import authAPI from "../services/authAPI";
 import AuthContext from "../contexts/AuthContext";
+import Field from "../components/forms/Field";
 
-const LoginPage = ({ history }) => {
+const LoginPage = ({history}) => {
 
     const {setIsAuthenticated} = useContext(AuthContext);
 
@@ -38,32 +39,11 @@ const LoginPage = ({ history }) => {
         <>
             <h1>Connexion à l'application</h1>
             <form action="" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse email</label>
-                    <input
-                        value={credentials.username}
-                        onChange={handleChange}
-                        type="email"
-                        placeholder="Adresse email de connexion"
-                        id="username"
-                        name="username"
-                        className={"form-control" + (error && " is-invalid")}
-                    />
-                    {error && <p className="invalid-feedback">
-                        {error}
-                    </p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        value={credentials.password}
-                        onChange={handleChange}
-                        type="password"
-                        className="form-control"
-                        placeholder="Mot de passe"
-                        id="password"
-                        name="password"/>
-                </div>
+                <Field label="Adresse email" name="username" value={credentials.username} onChange={handleChange}
+                       error={error} placeholder="Adresse email de connexion" type="email"/>
+
+                <Field label="Mot de passe" name="password" value={credentials.password} onChange={handleChange}
+                       error={error} placeholder="Mot de passe" type="password"/>
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Je me connecte</button>
                 </div>
